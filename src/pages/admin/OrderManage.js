@@ -142,7 +142,6 @@ const OrderManage = () => {
                 <thead>
                   <tr>
                     <th scope="col">STT</th>
-                    <th scope="col">ID</th>
                     <th scope="col">Tên</th>
                     <th scope="col">Trạng Thái</th>
                     <th scope="col">SĐT</th>
@@ -155,11 +154,10 @@ const OrderManage = () => {
                   {listOrder &&
                     listOrder.length > 0 &&
                     listOrder.map((item, index) => {
-                      const displayIndex = (page - 1) * 5 + index + 1;
+                      const displayIndex = (page - 1) * 8 + index + 1;
                       return (
                         <tr key={index}>
                           <th scope="row">{displayIndex}</th>
-                          <td>{item.id}</td>
                           <td>{item.name}</td>
                           <td>{displayStatus(item.status, item.id)}</td>
                           <td>{item.phone}</td>

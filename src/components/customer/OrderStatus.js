@@ -7,17 +7,24 @@ import { useParams } from "react-router-dom";
 const OrderStatus = () => {
   const dispatch = useDispatch()
   let { user_id } = useParams();
-  const { orderWait, orderShip, orderComplete, orderCancel } = useSelector(
-    (state) => state.customer.order
-  );
-  useEffect(() => {
-    dispatch(getOrderWait(user_id))
-    dispatch(getOrderShip(user_id))
-    dispatch(getOrderComplete(user_id))
-    dispatch(getOrderCancel(user_id))
-  }, []);
   const user = useSelector((state) => state.customer.auth.dataUser);
   const navigate = useNavigate();
+  const {
+    orderWait,
+    orderShip,
+    orderComplete,
+    orderCancel,
+    handleOrderCancel,
+    handleOrderConfirm,
+  } = useSelector((state) => state.customer.order);
+
+  useEffect(() => {
+    dispatch(getOrderWait(user_id));
+    dispatch(getOrderShip(user_id));
+    dispatch(getOrderComplete(user_id));
+    dispatch(getOrderCancel(user_id));
+  }, [handleOrderCancel, handleOrderConfirm]);
+
   return (
     <div
       style={{ width: "70%", margin: "auto", height: "50px" }}

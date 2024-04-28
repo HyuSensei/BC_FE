@@ -21,18 +21,23 @@ const CartItem = () => {
   const cartTotalAmount = useSelector(
     (state) => state.customer.cart.cartTotalAmount
   );
+
   const removeCartClick = (product) => {
     dispatch(removeCart(product));
   };
+
   const decreaseCartClick = (product) => {
     dispatch(decreaseCart(product));
   };
+
   const increaseCartClick = (product) => {
     dispatch(addTocart(product));
   };
+
   useEffect(() => {
     dispatch(getTotal());
   }, [cart]);
+
   return (
     <>
       <div style={{ marginBottom: "100px" }} className="container">

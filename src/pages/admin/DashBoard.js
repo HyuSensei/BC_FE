@@ -16,6 +16,7 @@ const DashBoard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [listOrder, setListOrder] = useState([]);
   const dataDashBoard = useSelector((state) => state.admin.order.listOrderHome);
   const isAuth = useSelector((state) => state.admin.auth.isAuth);
@@ -35,6 +36,7 @@ const DashBoard = () => {
     try {
       const res = await getOrderAdmin(page);
       setListOrder(res.data.orders);
+      setTotalPage(res.data.total_page);
     } catch (error) {
       console.log(error);
     }
@@ -160,7 +162,6 @@ const DashBoard = () => {
               <thead>
                 <tr>
                   <th scope="col">STT</th>
-                  <th scope="col">ID</th>
                   <th scope="col">Tên</th>
                   <th scope="col">Trạng Thái</th>
                   <th scope="col">Thanh Toán</th>
@@ -171,11 +172,11 @@ const DashBoard = () => {
                 {listOrder &&
                   listOrder.length > 0 &&
                   listOrder.map((item, index) => {
+                    const displayIndex = (page - 1) * 8 + index + 1;
                     return (
                       <>
                         <tr key={`order-${index + 1}`}>
-                          <th scope="row">{index + 1}</th>
-                          <td>{item.id}</td>
+                          <th scope="row">{displayIndex}</th>
                           <td>{item.name}</td>
                           <td>{displayStatus(item.status)}</td>
                           <td>{item.payment}</td>
@@ -186,13 +187,13 @@ const DashBoard = () => {
                   })}
               </tbody>
             </table>
-            {dataDashBoard && dataDashBoard.total_page && (
+            {listOrder && listOrder.length > 0 && (
               <ReactPaginate
                 nextLabel=" >"
                 onPageChange={(e) => handlePageClick(e)}
                 pageRangeDisplayed={3}
                 marginPagesDisplayed={2}
-                pageCount={dataDashBoard.total_page}
+                pageCount={totalPage}
                 previousLabel="< "
                 pageClassName="page-item"
                 pageLinkClassName="page-link"

@@ -18,9 +18,15 @@ const ProductHome = () => {
     dispatch(fetchProductHome());
   }, []);
 
-  // const addTocartClick = (product) => {
-  //   dispatch(addTocart(product));
-  // };
+  if (!listProduct || listProduct.length === 0) {
+    return (
+      <div
+        style={{ textAlign: "center", marginTop: "50px", marginBottom: "50px" }}
+      >
+        <h4>LOADING...</h4>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -31,52 +37,46 @@ const ProductHome = () => {
         SẢN PHẨM NỔI BẬT
       </h3>
       <div className="row">
-        {listProduct &&
-          listProduct.length > 0 ? (listProduct.map((item, index) => {
-            return (
-              <div
-                key={`product-${index}`}
-                style={{ marginBottom: "50px" }}
-                className="col-3"
-              >
-                <div>
-                  <Link to={`/detail/${item.id}`}>
-                    <img width={"100%"} src={URL_IMAGE + item.image} alt="" />
-                  </Link>
-                </div>
-                <div>
-                  <p
-                    style={{
-                      overflow: "hidden",
-                      maxHeight: "2.8em",
-                      lineHeight: "1.4em",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => navigate(`/detail/${item.id}`)}
-                  >
-                    {item.name}
-                  </p>
-                </div>
-                <div>
-                  <FaStar style={{ color: "#e3c01c" }} />
-                  <FaStar style={{ color: "#e3c01c" }} />
-                  <FaStar style={{ color: "#e3c01c" }} />
-                  <FaStar style={{ color: "#e3c01c" }} />
-                  <FaStar style={{ color: "#e3c01c" }} />
-                </div>
-                <div>
-                  <p style={{ color: "#883731", fontWeight: "bold" }}>
-                    {item.price.toLocaleString("vi-VN")} đ
-                  </p>
-                </div>
+        {listProduct.map((item, index) => {
+          return (
+            <div
+              key={`product-${index}`}
+              style={{ marginBottom: "50px" }}
+              className="col-3"
+            >
+              <div>
+                <Link to={`/detail/${item.id}`}>
+                  <img width={"100%"} src={URL_IMAGE + item.image} alt="" />
+                </Link>
               </div>
-            );
-          })) : (
-          <div style={{ textAlign: 'center' }}>
-            <h4>LOADING...</h4>
-          </div>
-        )
-        }
+              <div>
+                <p
+                  style={{
+                    overflow: "hidden",
+                    maxHeight: "2.8em",
+                    lineHeight: "1.4em",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => navigate(`/detail/${item.id}`)}
+                >
+                  {item.name}
+                </p>
+              </div>
+              <div>
+                <FaStar style={{ color: "#e3c01c" }} />
+                <FaStar style={{ color: "#e3c01c" }} />
+                <FaStar style={{ color: "#e3c01c" }} />
+                <FaStar style={{ color: "#e3c01c" }} />
+                <FaStar style={{ color: "#e3c01c" }} />
+              </div>
+              <div>
+                <p style={{ color: "#883731", fontWeight: "bold" }}>
+                  {item.price.toLocaleString("vi-VN")} đ
+                </p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

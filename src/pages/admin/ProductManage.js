@@ -30,6 +30,7 @@ const ProductManage = () => {
   const updateProduct = useSelector(
     (state) => state.admin.product.updateProduct
   );
+  const storeProduct = useSelector((state) => state.admin.product.storeProduct);
   const isAuth = useSelector((state) => state.admin.auth.isAuth);
   const Toggle = () => {
     setToggle(!toggle);
@@ -39,7 +40,7 @@ const ProductManage = () => {
       navigate("/admin");
     }
     fetchAllProduct();
-  }, [page, deleteProduct, updateProduct, isAuth]);
+  }, [page, deleteProduct, updateProduct, storeProduct, isAuth]);
 
   const fetchAllProduct = async () => {
     try {
@@ -122,7 +123,6 @@ const ProductManage = () => {
                 <thead>
                   <tr>
                     <th scope="col">STT</th>
-                    <th scope="col">ID</th>
                     <th scope="col">Ảnh</th>
                     <th scope="col">Tên</th>
                     <th scope="col">Giá</th>
@@ -138,7 +138,6 @@ const ProductManage = () => {
                       return (
                         <tr key={index}>
                           <th scope="row">{displayIndex}</th>
-                          <td>{item.id}</td>
                           <td style={{ width: "150px" }}>
                             <img
                               width={"100px"}

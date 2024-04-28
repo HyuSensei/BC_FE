@@ -97,12 +97,6 @@ const Order = () => {
             const res = stripe.redirectToCheckout({
               sessionId: result.payload.id,
             });
-            // dispatch(clearCart());
-            // setName("");
-            // setPhone("");
-            // setAddress("");
-            // setPayment("");
-            // toast.success(`${result.payload.message}`);
             if (res.error) {
               console.log(res.error);
             }
