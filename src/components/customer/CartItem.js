@@ -12,6 +12,12 @@ import {
 } from "../../redux/silce/customer/cartSlice";
 import Order from "./Order";
 import { useNavigate } from "react-router-dom";
+import { Table } from "antd";
+import {
+  CloseCircleOutlined,
+  PlusCircleOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 
 const CartItem = () => {
   const navigate = useNavigate();
@@ -38,114 +44,86 @@ const CartItem = () => {
     dispatch(getTotal());
   }, [cart]);
 
+  const columns = [
+    {
+      title: "Sản phẩm",
+      key: "image",
+      dataIndex: "image",
+      render: (text) => {
+        return <img width={"120px"} src={URL_IMAGE + text} alt="" />;
+      },
+    },
+    {
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "cartQuantity",
+      key: "cartQuantity",
+      render: (text, record, _) => {
+        return (
+          <>
+            <PlusCircleOutlined
+              onClick={() => {
+                increaseCartClick(record);
+              }}
+              style={{
+                fontSize: "25px",
+                marginRight: "15px",
+                color: "#3c763d",
+                cursor: "pointer",
+              }}
+            />
+            <span style={{ fontSize: "18px", fontWeight: "bold" }}>{text}</span>
+            <MinusCircleOutlined
+              onClick={() => {
+                decreaseCartClick(record);
+              }}
+              style={{
+                fontSize: "25px",
+                marginLeft: "15px",
+                color: "#3c763d",
+                cursor: "pointer",
+              }}
+            />
+          </>
+        );
+      },
+    },
+    {
+      title: "Giá",
+      dataIndex: "price",
+      key: "price",
+      render: (text) => (
+        <p style={{ color: "#820813", fontWeight: "bold" }}>
+          {text.toLocaleString("vi-VN")} đ
+        </p>
+      ),
+    },
+    {
+      title: "Xóa",
+      key: "delete",
+      render: (_, record) => (
+        <CloseCircleOutlined
+          onClick={() => removeCartClick(record)}
+          style={{ fontSize: "25px", color: "#923731", cursor: "pointer" }}
+        />
+      ),
+    },
+  ];
+
   return (
     <>
       <div style={{ marginBottom: "100px" }} className="container">
-        <div>
-          <span style={{ fontSize: "18px" }}>
-            <FaHome />
-          </span>
-          <span
-            style={{ marginLeft: "5px", fontSize: "17px", cursor: "pointer" }}
-            onClick={() => navigate("/")}
-          >
-            Trang Chủ {">"}{" "}
-          </span>
-          <span
-            style={{
-              marginLeft: "5px",
-              fontSize: "17px",
-              color: "gray",
-              cursor: "pointer",
-            }}
-          >
-            Giỏ Hàng
-          </span>
-        </div>
-        <div className="container-fluid" style={{ marginTop: "50px" }}>
-          <table className="table table-borderless">
-            <thead>
-              <tr>
-                <th scope="col">SẢN PHẨM</th>
-                <th scope="col">TÊN</th>
-                <th scope="col">GIÁ</th>
-                <th scope="col">SỐ LƯỢNG</th>
-                <th scope="col">TỔNG TIỀN</th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {cart && cart.length > 0 ? (
-                <>
-                  {cart.map((item, index) => {
-                    return (
-                      <tr key={`cart-${index}`}>
-                        <td>
-                          <img
-                            src={URL_IMAGE + item.image}
-                            width={"120px"}
-                            alt=""
-                          />
-                        </td>
-                        <td style={{ width: "400px", textAlign: "left" }}>
-                          {item.name}
-                        </td>
-                        <td style={{ fontWeight: "bold", color: "#883731 " }}>
-                          {item.price.toLocaleString("vi-VN")} đ
-                        </td>
-                        <td>
-                          <FaCircleMinus
-                            onClick={() => decreaseCartClick(item)}
-                            style={{
-                              fontSize: "25px",
-                              color: "gray",
-                              marginRight: "10px",
-                              cursor: "pointer",
-                            }}
-                          />
-                          {item.cartQuantity}
-                          <FaCirclePlus
-                            onClick={() => increaseCartClick(item)}
-                            style={{
-                              fontSize: "25px",
-                              color: "gray",
-                              marginLeft: "10px",
-                              cursor: "pointer",
-                            }}
-                          />
-                        </td>
-                        <td style={{ fontWeight: "bold", color: "#883731 " }}>
-                          {(item.cartQuantity * item.price).toLocaleString(
-                            "vi-VN"
-                          )}{" "}
-                          đ
-                        </td>
-                        <td>
-                          <TiDelete
-                            onClick={() => removeCartClick(item)}
-                            style={{
-                              fontSize: "50px",
-                              color: "gray",
-                              cursor: "pointer",
-                            }}
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  <tr>
-                    <td colSpan={"5"} style={{ textAlign: "center" }}>
-                      <h5 style={{ color: "gray" }}>GIỎ HÀNG TRỐNG</h5>
-                    </td>
-                  </tr>
-                </>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <h5 style={{ marginBottom: "20px" }}>GIỎ HÀNG CỦA BẠN</h5>
+        <Table
+          scroll={{ x: true }}
+          columns={columns}
+          dataSource={cart}
+          pagination={false}
+        />
         <Order />
       </div>
     </>

@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomerRoute from "./routes/customer";
 import AdminRoute from "./routes/admin";
+import { FloatButton } from "antd";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         pauseOnHover
         theme="light"
       />
+      <FloatButton.BackTop />
     </BrowserRouter>
   );
 }

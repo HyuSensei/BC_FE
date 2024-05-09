@@ -10,6 +10,8 @@ import {
 import "../../assets/customer/Rate.css";
 import { toast } from "react-toastify";
 import { UrlImage } from "../../url";
+import { SmileOutlined } from "@ant-design/icons";
+import { Button, Result } from "antd";
 
 const Rate = () => {
   const URL_IMAGE = UrlImage();
@@ -176,9 +178,15 @@ const Rate = () => {
       ) : (
         <>
           {ProductRate && ProductRate.message && (
-            <div style={{ marginBottom: "100px", textAlign: "center" }}>
-              <h4>{ProductRate.message}</h4>
-            </div>
+            <Result
+              icon={<SmileOutlined />}
+              title={ProductRate.message}
+              extra={
+                <Button onClick={() => navigate("/")} type="primary">
+                  Quay lại
+                </Button>
+              }
+            />
           )}
         </>
       )}

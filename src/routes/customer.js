@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "../pages/customer/Home";
 import Login from "../pages/customer/Login";
 import Register from "../pages/customer/Register";
@@ -13,22 +13,12 @@ import Search from "../pages/customer/Search";
 import CategorySkincare from "../pages/customer/CategorySkincare";
 import CategoryMakeup from "../pages/customer/CategoryMakeup";
 import Rate from "../pages/customer/Rate";
-import { useSelector } from "react-redux";
 import NotFound from "../pages/404";
 import OrderSuccess from "../pages/customer/OrderSuccess";
 import CancelPage from "../pages/customer/CancelPage";
+import OrderHistory from "../pages/customer/OrderHistory";
 
 const CustomerRoute = (props) => {
-  const isAuthSuccess = useSelector(
-    (state) => state.customer.auth.isAuthSucess
-  );
-  const ProtectedRoute = () => {
-    if (!isAuthSuccess) {
-      return <Navigate to={"/login"} replace />;
-    }
-    return <Outlet />;
-  };
-
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -40,6 +30,7 @@ const CustomerRoute = (props) => {
       <Route path="/order_ship/:user_id" element={<OrderShip />} />
       <Route path="/order_complete/:user_id" element={<OrderComplete />} />
       <Route path="/order_cancel/:user_id" element={<OrderCancel />} />
+      <Route path="/order_history/:user_id" element={<OrderHistory />} />
       <Route path="/search" element={<Search />} />
       <Route
         path="/category_skincare/:category_id"

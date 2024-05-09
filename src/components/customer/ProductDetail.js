@@ -8,6 +8,7 @@ import { FaStar } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { addTocartDetail } from "../../redux/silce/customer/cartSlice";
 import { FaUserCircle } from "react-icons/fa";
+import { Image, Spin } from "antd";
 
 const ProductDetail = () => {
   const URL_IMAGE = UrlImage();
@@ -96,12 +97,16 @@ const ProductDetail = () => {
   };
 
   if (!productDetail || !countStar) {
+    const contentStyle = {
+      padding: 50,
+      background: "rgba(0, 0, 0, 0.05)",
+      borderRadius: 4,
+    };
+    const content = <div style={contentStyle} />;
     return (
-      <div
-        style={{ textAlign: "center", marginTop: "50px", marginBottom: "50px" }}
-      >
-        <h4>LOADING...</h4>
-      </div>
+      <Spin tip="Loading" size="small">
+        {content}
+      </Spin>
     );
   }
 
@@ -111,36 +116,21 @@ const ProductDetail = () => {
         style={{ marginBottom: "50px", marginTop: "20px" }}
         className="container"
       >
-        <h3 style={{ marginBottom: "40px", color: "gray" }}>
+        <h5>
           CHI TIẾT SẢN PHẨM
-        </h3>
+        </h5>
         <div className="row">
           <div className="col-6">
             <div style={{ width: "60%" }}>
               <MDBCarousel showControls>
                 <MDBCarouselItem itemId={1}>
-                  <img
-                    src={URL_IMAGE + productDetail.image}
-                    width={"100px"}
-                    className="d-block w-100"
-                    alt="..."
-                  />
+                  <Image width={400} src={URL_IMAGE + productDetail.image} />
                 </MDBCarouselItem>
                 <MDBCarouselItem itemId={2}>
-                  <img
-                    src={URL_IMAGE + productDetail.image}
-                    width={"100px"}
-                    className="d-block w-100"
-                    alt="..."
-                  />
+                  <Image width={400} src={URL_IMAGE + productDetail.image} />
                 </MDBCarouselItem>
                 <MDBCarouselItem itemId={3}>
-                  <img
-                    src={URL_IMAGE + productDetail.image}
-                    width={"100px"}
-                    className="d-block w-100"
-                    alt="..."
-                  />
+                  <Image width={400} src={URL_IMAGE + productDetail.image} />
                 </MDBCarouselItem>
               </MDBCarousel>
             </div>

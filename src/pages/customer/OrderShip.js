@@ -34,8 +34,8 @@ const OrderShip = () => {
   };
   return (
     <>
+      <Header />
       <Stack gap={5}>
-        <Header />
         <div style={{ marginBottom: "800px" }} className="container">
           <div>
             <span style={{ fontSize: "18px" }}>

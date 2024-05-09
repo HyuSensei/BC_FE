@@ -12,6 +12,8 @@ import { IoBagHandle } from "react-icons/io5";
 import { getTotal } from "../../../redux/silce/customer/cartSlice";
 import { fetchAllCategory } from "../../../redux/silce/customer/categorySlice";
 import SearchInput from "../SearchInput";
+import { Badge, Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -103,28 +105,27 @@ const Header = () => {
             </Nav>
             <Nav>
               <Nav.Link>
-                <IoBagHandle
-                  onClick={() => navigatePage("/cart")}
-                  style={{ fontSize: "35px", color: "#4e7661 " }}
-                />
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "20px",
-                    height: "20px",
-                    borderRadius: "50%",
-                    backgroundColor: "#4e7661",
-                    textAlign: "center",
-                    lineHeight: "19px",
-                    color: "white",
-                  }}
-                >
-                  {cartTotalQuantity}
-                </span>
+                <Badge color="#923731" count={cartTotalQuantity}>
+                  <IoBagHandle
+                    onClick={() => navigatePage("/cart")}
+                    style={{ fontSize: "35px", color: "#4e7661 " }}
+                  />
+                </Badge>
               </Nav.Link>
               {isAuth && isAuth.success === true ? (
                 <>
-                  <NavDropdown title="Tài Khoản" id="collapsible-nav-dropdown">
+                  <NavDropdown
+                    style={{ marginRight: "20px" }}
+                    title={
+                      <Avatar
+                        style={{
+                          backgroundColor: "#87d068",
+                        }}
+                        icon={<UserOutlined />}
+                      />
+                    }
+                    id="collapsible-nav-dropdown"
+                  >
                     {userLogin && userLogin.name && (
                       <NavDropdown.Item>
                         Hello ! {userLogin.name}

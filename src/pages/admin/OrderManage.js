@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Nav from "../../components/admin/Nav";
-import Sidebar from "../../components/admin/Sidebar";
+import React, { useState, useEffect, useMemo } from "react";
 import { getOrder } from "../../axios/services";
-import ReactPaginate from "react-paginate";
-import { MdDelete } from "react-icons/md";
-import { FaEye } from "react-icons/fa";
 import ModalOrder from "../../components/admin/ModalOrder";
 import {
   getOrderDetail,
@@ -13,6 +8,9 @@ import {
 } from "../../redux/silce/admin/orderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import LayoutComponent from "../../components/admin/LayoutComponent";
+import { Table, Tag, Pagination, Tooltip } from "antd";
+import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 
 const OrderManage = () => {
   const navigate = useNavigate();
@@ -21,15 +19,14 @@ const OrderManage = () => {
     (state) => state.admin.order
   );
   const isAuth = useSelector((state) => state.admin.auth.isAuth);
-  const [toggle, setToggle] = useState(true);
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const [totalPage, setTotalPage] = useState(0);
   const [listOrder, setListOrder] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [dataOrder, setDataOrder] = useState({});
-  const Toggle = () => {
-    setToggle(!toggle);
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [arrow, setArrow] = useState("Show");
   useEffect(() => {
     if (isAuth && isAuth.detail) {
       navigate("/admin");
@@ -39,61 +36,14 @@ const OrderManage = () => {
 
   const fetchAllOrder = async () => {
     try {
-      const res = await getOrder(page);
+      setIsLoading(true);
+      const res = await getOrder({ page, limit: pageSize });
       setListOrder(res.data.orders);
       setTotalPage(res.data.total_page);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
-  };
-  const handlePageClick = (e) => {
-    setPage(e.selected + 1);
-  };
-  const displayStatus = (status, order_id) => {
-    let statusContent;
-    switch (status) {
-      case 0:
-        statusContent = (
-          <div>
-            <button
-              onClick={() => confirmClick(order_id)}
-              style={{ width: "140px" }}
-              type="button"
-              className="btn btn-success"
-            >
-              Duyệt
-            </button>
-          </div>
-        );
-        break;
-      case 1:
-        statusContent = (
-          <div>
-            <p style={{ color: "#01bacf" }}>Đang giao</p>
-          </div>
-        );
-        break;
-      case 2:
-        statusContent = (
-          <div>
-            <p style={{ color: "#198754" }}>Hoàn thành</p>
-          </div>
-        );
-        break;
-      case 3:
-        statusContent = (
-          <div>
-            <p style={{ color: "#ce1515" }}>Đã hủy</p>
-          </div>
-        );
-        break;
-
-      default:
-        statusContent = <div>Invalid star value</div>;
-        break;
-    }
-
-    return statusContent;
   };
 
   const OrderDetail = (order) => {
@@ -115,110 +65,141 @@ const OrderManage = () => {
   const deleteClick = (order_id) => {
     dispatch(handleDeleteOrder(order_id));
   };
+  const mergedArrow = useMemo(() => {
+    if (arrow === "Hide") {
+      return false;
+    }
+    if (arrow === "Show") {
+      return true;
+    }
+    return {
+      pointAtCenter: true,
+    };
+  }, [arrow]);
+
+  const columns = [
+    {
+      title: "STT",
+      key: "stt",
+      render: (text, record, index) => {
+        const displayIndex = (page - 1) * pageSize + index + 1;
+        return <p>{displayIndex}</p>;
+      },
+    },
+    {
+      title: "Khách Hàng",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Số Điện Thoại",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "Địa Chỉ",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Trạng Thái",
+      dataIndex: "status",
+      key: "status",
+      render: (text, record, index) => {
+        if (text === 0) {
+          return (
+            <Tooltip
+              placement="top"
+              title={"Duyệt đơn hàng ngay"}
+              arrow={mergedArrow}
+            >
+              <Tag
+                style={{ cursor: "pointer" }}
+                onClick={() => confirmClick(record.id)}
+                color={"#fab40a"}
+              >
+                ĐANG CHỜ
+              </Tag>
+            </Tooltip>
+          );
+        }
+        if (text === 1) {
+          return <Tag color={"#5bc0de"}>ĐANG GIAO</Tag>;
+        }
+        if (text === 2) {
+          return <Tag color={"#19c37d"}>ĐÃ NHẬN</Tag>;
+        }
+        if (text === 3) {
+          return <Tag color={"#ce1515"}>ĐÃ HỦY</Tag>;
+        }
+      },
+    },
+    {
+      title: "Thanh Toán",
+      dataIndex: "payment",
+      key: "payment",
+    },
+    {
+      title: "Tổng Tiền",
+      dataIndex: "total",
+      key: "total",
+      render: (text) => <p>{text.toLocaleString("vi-VN")} đ</p>,
+    },
+    {
+      title: "Thao Tác",
+      key: "action",
+      render: (_, record) => (
+        <>
+          <DeleteOutlined
+            style={{
+              marginRight: "30x",
+              fontSize: "20px",
+              cursor: "pointer",
+              color: "#883731",
+            }}
+            onClick={() => deleteClick(record.id)}
+          />{" "}
+          <EyeOutlined
+            style={{ fontSize: "20px", cursor: "pointer", color: "#d3bb75" }}
+            onClick={() => OrderDetail(record)}
+          />
+        </>
+      ),
+    },
+  ];
   return (
-    <>
+    <LayoutComponent>
       <ModalOrder
         dataOrder={dataOrder}
         showModal={showModal}
         handleClose={handleClose}
       />
-      <div
-        style={{ backgroundColor: "#f0f0f0" }}
-        className="container-fluid bg min-vh-100 "
-      >
-        <div className="row ">
-          {toggle && (
-            <div className="col-4 col-md-2 bg-white vh-100 position-fixed">
-              <Sidebar />
-            </div>
-          )}
-          {toggle && <div className="col-4 col-md-2"></div>}
-          <div className="col">
-            <div className="px-3">
-              <Nav Toggle={Toggle} />
-              <div className="container-fluid"></div>
-              <table className="table caption-top bg-white rounded mt-2">
-                <caption className="text fs-4">QUẢN LÝ ĐƠN HÀNG</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên</th>
-                    <th scope="col">Trạng Thái</th>
-                    <th scope="col">SĐT</th>
-                    <th scope="col">Địa Chỉ</th>
-                    <th scope="col">Tổng Tiền</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {listOrder &&
-                    listOrder.length > 0 &&
-                    listOrder.map((item, index) => {
-                      const displayIndex = (page - 1) * 8 + index + 1;
-                      return (
-                        <tr key={index}>
-                          <th scope="row">{displayIndex}</th>
-                          <td>{item.name}</td>
-                          <td>{displayStatus(item.status, item.id)}</td>
-                          <td>{item.phone}</td>
-                          <td>{item.address}</td>
-                          <td
-                            style={{
-                              color: "#883731",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {item.total.toLocaleString("vi-VN")} đ
-                          </td>
-                          <td>
-                            <MdDelete
-                              style={{
-                                fontSize: "25px",
-                                marginRight: "10px",
-                                cursor: "pointer",
-                                color: "#dc0000",
-                              }}
-                              onClick={() => deleteClick(item.id)}
-                            />
-                            <FaEye
-                              onClick={() => OrderDetail(item)}
-                              style={{
-                                fontSize: "25px",
-                                cursor: "pointer",
-                                color: "#5bc0de",
-                              }}
-                            />
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-              <ReactPaginate
-                nextLabel=" >"
-                onPageChange={(e) => handlePageClick(e)}
-                pageRangeDisplayed={3}
-                marginPagesDisplayed={2}
-                pageCount={totalPage}
-                previousLabel="< "
-                pageClassName="page-item"
-                pageLinkClassName="page-link"
-                previousClassName="page-item"
-                previousLinkClassName="page-link"
-                nextClassName="page-item"
-                nextLinkClassName="page-link"
-                breakLabel="..."
-                breakClassName="page-item"
-                breakLinkClassName="page-link"
-                containerClassName="pagination"
-                activeClassName="active"
-                renderOnZeroPageCount={null}
-              />
-            </div>
-          </div>
-        </div>
+      <h5 style={{ marginTop: "50px", marginBottom: "30px" }}>
+        DANH SÁCH ĐƠN HÀNG
+      </h5>
+      <Table
+        scroll={{ x: true }}
+        loading={isLoading}
+        columns={columns}
+        dataSource={listOrder}
+        pagination={false}
+      />
+      <div style={{ marginTop: "30px" }}>
+        {listOrder.length > 0 && (
+          <Pagination
+            onChange={(pageValue, _) => {
+              setPage(pageValue);
+            }}
+            onShowSizeChange={(_, size) => {
+              setPageSize(size);
+            }}
+            current={page}
+            pageSize={pageSize}
+            total={totalPage * pageSize}
+          />
+        )}
       </div>
-    </>
+    </LayoutComponent>
   );
 };
 export default OrderManage;

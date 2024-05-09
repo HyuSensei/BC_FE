@@ -25,8 +25,8 @@ const OrderCancel = () => {
 
   return (
     <>
+      <Header />
       <Stack gap={5}>
-        <Header />
         <div style={{ height: "1000px" }} className="container">
           <div>
             <span style={{ fontSize: "18px" }}>

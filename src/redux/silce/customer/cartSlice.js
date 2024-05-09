@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
+import { message } from "antd";
 
 const initialState = {
   cartItem: localStorage.getItem("cartItem")
@@ -19,11 +19,11 @@ export const cartSlice = createSlice({
       );
       if (itemIdex >= 0) {
         state.cartItem[itemIdex].cartQuantity += 1;
-        toast.success("Tăng số lượng giỏ hàng thành công ");
+        message.info("Tăng số lượng giỏ hàng thành công ");
       } else {
         const tempProduct = { ...action.payload, cartQuantity: 1 };
         state.cartItem.push(tempProduct);
-        toast.success("Thêm giỏ hàng thành công ");
+        message.success("Thêm giỏ hàng thành công ");
       }
       localStorage.setItem("cartItem", JSON.stringify(state.cartItem));
     },
@@ -37,12 +37,12 @@ export const cartSlice = createSlice({
         let quantity = parseInt(action.payload.cartQuantity);
         state.cartItem[itemIdex].cartQuantity += quantity;
         console.log(state.cartItem[itemIdex].cartQuantity);
-        toast.info("Tăng số lượng giỏ hàng thành công ");
+        message.info("Tăng số lượng giỏ hàng thành công ");
       } else {
         let quantity = parseInt(action.payload.cartQuantity);
         const tempProduct = { ...action.payload, cartQuantity: quantity };
         state.cartItem.push(tempProduct);
-        toast.success("Thêm giỏ hàng thành công ");
+        message.success("Thêm giỏ hàng thành công ");
       }
       localStorage.setItem("cartItem", JSON.stringify(state.cartItem));
     },
@@ -53,13 +53,13 @@ export const cartSlice = createSlice({
       );
       if (state.cartItem[itemIdex].cartQuantity > 1) {
         state.cartItem[itemIdex].cartQuantity -= 1;
-        toast.info("Giảm số lượng giỏ hàng thành công ");
+        message.info("Giảm số lượng giỏ hàng thành công ");
       } else if (state.cartItem[itemIdex].cartQuantity === 1) {
         const nextCartItem = state.cartItem.filter(
           (item) => item.id !== action.payload.id
         );
         state.cartItem = nextCartItem;
-        toast.success("Xóa giỏ hàng thành công ");
+        message.success("Xóa giỏ hàng thành công ");
       }
       localStorage.setItem("cartItem", JSON.stringify(state.cartItem));
     },
@@ -70,7 +70,7 @@ export const cartSlice = createSlice({
       );
       state.cartItem = nextCartItem;
       localStorage.setItem("cartItem", JSON.stringify(state.cartItem));
-      toast.success("Xóa giỏ hàng thành công ");
+      message.success("Xóa giỏ hàng thành công ");
     },
 
     getTotal(state, action) {

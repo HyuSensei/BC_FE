@@ -1,30 +1,51 @@
-import React, { useEffect } from "react";
-import { FaCartShopping } from "react-icons/fa6";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductHome } from "../../redux/silce/customer/productSilce";
-import { addTocart } from "../../redux/silce/customer/cartSlice";
 import { UrlImage } from "../../url";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import { Image, Spin, Pagination } from "antd";
+import { fetchAllProduct } from "../../axios/services";
 
 const URL_IMAGE = UrlImage();
 const ProductHome = () => {
   const navigate = useNavigate();
-  const listProduct = useSelector(
-    (state) => state.customer.product.listProduct
-  );
-  const dispatch = useDispatch();
+  // const listProduct = useSelector(
+  //   (state) => state.customer.product.listProduct
+  // );
+  // const dispatch = useDispatch();
+  const [listProduct, setListProduct] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
+  const [totalPage, setTotalPage] = useState(0);
+  const fetchAll = async () => {
+    try {
+      let res = await fetchAllProduct({
+        page,
+        limit: pageSize,
+      });
+      setListProduct(res.data.products);
+      setTotalPage(res.data.total_page);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    dispatch(fetchProductHome());
-  }, []);
+    fetchAll();
+  }, [page, pageSize]);
 
   if (!listProduct || listProduct.length === 0) {
+    const contentStyle = {
+      padding: 50,
+      background: "rgba(0, 0, 0, 0.05)",
+      borderRadius: 4,
+    };
+    const content = <div style={contentStyle} />;
     return (
-      <div
-        style={{ textAlign: "center", marginTop: "50px", marginBottom: "50px" }}
-      >
-        <h4>LOADING...</h4>
-      </div>
+      <Spin tip="Loading" size="small">
+        {content}
+      </Spin>
     );
   }
 
@@ -45,9 +66,7 @@ const ProductHome = () => {
               className="col-3"
             >
               <div>
-                <Link to={`/detail/${item.id}`}>
-                  <img width={"100%"} src={URL_IMAGE + item.image} alt="" />
-                </Link>
+                <Image style={{ width: "100%" }} src={URL_IMAGE + item.image} />
               </div>
               <div>
                 <p
@@ -78,6 +97,19 @@ const ProductHome = () => {
           );
         })}
       </div>
+      {listProduct.length > 0 && (
+        <Pagination
+          onChange={(pageValue, _) => {
+            setPage(pageValue);
+          }}
+          onShowSizeChange={(_, size) => {
+            setPageSize(size);
+          }}
+          current={page}
+          pageSize={pageSize}
+          total={totalPage * pageSize}
+        />
+      )}
     </div>
   );
 };

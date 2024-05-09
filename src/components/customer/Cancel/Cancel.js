@@ -1,27 +1,23 @@
 import React from "react";
 import "./Cancel.css";
 import { useNavigate } from "react-router-dom";
+import { Button, Result } from "antd";
 
 export default function Cancel() {
   const navigate = useNavigate();
   return (
-    <div style={{ marginTop: "200px" }} class="row justify-content-center">
-      <div class="col-md-5">
-        <div class="message-box _success _failed">
-          <i class="fa fa-times-circle" aria-hidden="true"></i>
-          <h4> Thanh toán không thành công </h4>
-          <div>
-            <button
-              style={{ marginTop: "10px" }}
-              type="button"
-              class="btn btn-danger"
-              onClick={() => navigate("/")}
-            >
-              Home
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Result
+      status="error"
+      title="Thanh toán không thành công"
+      subTitle="Khách hàng vui lòng kiểm tra lại thông tin thanh toán"
+      extra={[
+        <Button onClick={() => navigate("/")} type="primary" key="console">
+          Home
+        </Button>,
+        <Button onClick={() => navigate("/cart")} key="buy">
+          Mua hàng
+        </Button>,
+      ]}
+    />
   );
 }

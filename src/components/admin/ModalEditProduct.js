@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,10 +7,12 @@ import {
   handleUpdateProduct,
 } from "../../redux/silce/admin/productSlice";
 import { UrlImage } from "../../url";
+import { message, Button } from "antd";
 
 const ModalEditProduct = (props) => {
   const URL_IMAGE = UrlImage();
-  const { showModalEdit, handleCloseEdit, productEdit } = props;
+  const { showModalEdit, handleCloseEdit, productEdit, setShowModalEdit } =
+    props;
   const [image, setImage] = useState(null);
   const [imageAvatar, setImageAvatar] = useState(null);
   const [name, setName] = useState("");
@@ -25,9 +26,6 @@ const ModalEditProduct = (props) => {
   useEffect(() => {
     dispatch(getCategory());
     setproductEdit();
-    if (!showModalEdit) {
-      setproductEdit();
-    }
   }, [showModalEdit, productEdit]);
 
   const setproductEdit = () => {
@@ -102,7 +100,8 @@ const ModalEditProduct = (props) => {
       formData.append("description", description);
       dispatch(handleUpdateProduct(formData)).then((res) => {
         if (res.payload && res.payload.success === true) {
-          toast.success(`${res.payload.message}`);
+          message.success(`${res.payload.message}`);
+          setShowModalEdit(false);
         }
       });
     }
@@ -218,19 +217,10 @@ const ModalEditProduct = (props) => {
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            onClick={() => submitEdit()}
-            style={{ width: "150px" }}
-            variant="primary"
-            type="button"
-          >
-            SỬA
+          <Button onClick={() => submitEdit()} type="primary">
+            THÊM
           </Button>
-          <Button
-            style={{ width: "150px" }}
-            variant="secondary"
-            onClick={handleCloseEdit}
-          >
+          <Button onClick={() => handleCloseEdit()} type="dashed">
             ĐÓNG
           </Button>
         </Modal.Footer>

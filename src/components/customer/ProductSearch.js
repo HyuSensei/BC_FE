@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import ReactPaginate from "react-paginate";
 import { getProductSearch } from "../../axios/services";
+import { Image } from "antd";
 
 const URL_IMAGE = UrlImage();
 const ProductSearch = () => {
@@ -51,9 +52,10 @@ const ProductSearch = () => {
                   className="col-3"
                 >
                   <div>
-                    <Link to={`/detail/${item.id}`}>
-                      <img width={"100%"} src={URL_IMAGE + item.image} alt="" />
-                    </Link>
+                    <Image
+                      style={{ width: "100%" }}
+                      src={URL_IMAGE + item.image}
+                    />
                   </div>
                   <div>
                     <p

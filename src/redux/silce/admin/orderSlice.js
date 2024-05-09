@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { UrlApi } from "../../../url";
-import { toast } from "react-toastify";
+import { message } from "antd";
 
 const URL_API = UrlApi();
 
@@ -17,11 +17,14 @@ const initialState = {
 
 export const getOrderHome = createAsyncThunk(
   "order/orderDashBoard",
-  async () => {
+  async ({ page, limit }) => {
     try {
-      const res = await axios.get(URL_API + `/admin/dashboard`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        URL_API + `/admin/dashboard?page=${page}&limit=${limit}`,
+        {
+          withCredentials: true,
+        }
+      );
       const data = await res.data;
       return data;
     } catch (error) {
@@ -132,7 +135,7 @@ export const orderSlice = createSlice({
           state.isSuccessConfirmOrder &&
           state.isSuccessConfirmOrder.success === true
         ) {
-          toast.success("Duyệt đơn hàng thành công");
+          message.success("Duyệt đơn hàng thành công");
         }
       })
       .addCase(handleConfirmOrder.rejected, (state, action) => {
@@ -154,7 +157,7 @@ export const orderSlice = createSlice({
           state.isSuccessDeleteOrder &&
           state.isSuccessDeleteOrder.success === true
         ) {
-          toast.success("Xóa đơn hàng thành công");
+          message.success("Xóa đơn hàng thành công");
         }
       })
       .addCase(handleDeleteOrder.rejected, (state, action) => {

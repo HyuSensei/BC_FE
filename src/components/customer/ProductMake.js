@@ -3,16 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { UrlImage } from "../../url";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import ReactPaginate from "react-paginate";
 import { getProductCategory } from "../../axios/services";
+import { Image, Spin, Pagination } from "antd";
 
 const URL_IMAGE = UrlImage();
 const ProductMakeup = () => {
   const { category_id } = useParams();
   const navigate = useNavigate();
   const [listProduct, setListProduct] = useState([]);
-  const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
+  const [totalPage, setTotalPage] = useState(0);
   const { listCategorySkincare, listCategoryMakeup } = useSelector(
     (state) => state.customer.category
   );
@@ -21,9 +22,13 @@ const ProductMakeup = () => {
     fetchAllProduct(page);
   }, [page, category_id]);
 
-  const fetchAllProduct = async (page) => {
+  const fetchAllProduct = async () => {
     try {
-      let res = await getProductCategory(category_id, page);
+      let res = await getProductCategory({
+        category_id,
+        page,
+        limit: pageSize,
+      });
       setListProduct(res.data.products);
       setTotalPage(res.data.total_page);
     } catch (error) {
@@ -31,15 +36,26 @@ const ProductMakeup = () => {
     }
   };
 
-  const handlePageClick = async (e) => {
-    setPage(e.selected + 1);
-  };
+  if (listProduct.length === 0) {
+    const contentStyle = {
+      padding: 50,
+      background: "rgba(0, 0, 0, 0.05)",
+      borderRadius: 4,
+    };
+    const content = <div style={contentStyle} />;
+    return (
+      <Spin tip="Loading" size="small">
+        {content}
+      </Spin>
+    );
+  }
+
   return (
     <>
       <div className="container">
         <div className="row">
           <div className="col-3">
-            <h3>DANH MỤC</h3>
+            <h5>DANH MỤC</h5>
             <div style={{ marginBottom: "20px", fontWeight: "bold" }}>
               CHĂM SÓC DA
             </div>
@@ -112,13 +128,10 @@ const ProductMakeup = () => {
                             className="col-3"
                           >
                             <div>
-                              <Link to={`/detail/${item.id}`}>
-                                <img
-                                  width={"100%"}
-                                  src={URL_IMAGE + item.image}
-                                  alt=""
-                                />
-                              </Link>
+                              <Image
+                                style={{ width: "100%" }}
+                                src={URL_IMAGE + item.image}
+                              />
                             </div>
                             <div>
                               <p
@@ -151,26 +164,20 @@ const ProductMakeup = () => {
                         );
                       })}
                     </div>
-                    <ReactPaginate
-                      nextLabel=" >"
-                      onPageChange={(e) => handlePageClick(e)}
-                      pageRangeDisplayed={3}
-                      marginPagesDisplayed={2}
-                      pageCount={totalPage}
-                      previousLabel="< "
-                      pageClassName="page-item"
-                      pageLinkClassName="page-link"
-                      previousClassName="page-item"
-                      previousLinkClassName="page-link"
-                      nextClassName="page-item"
-                      nextLinkClassName="page-link"
-                      breakLabel="..."
-                      breakClassName="page-item"
-                      breakLinkClassName="page-link"
-                      containerClassName="pagination"
-                      activeClassName="active"
-                      renderOnZeroPageCount={null}
-                    />
+
+                    {listProduct.length > 0 && (
+                      <Pagination
+                        onChange={(pageValue, _) => {
+                          setPage(pageValue);
+                        }}
+                        onShowSizeChange={(_, size) => {
+                          setPageSize(size);
+                        }}
+                        current={page}
+                        pageSize={pageSize}
+                        total={totalPage * pageSize}
+                      />
+                    )}
                   </>
                 ) : (
                   <>
