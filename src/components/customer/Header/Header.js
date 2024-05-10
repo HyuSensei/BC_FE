@@ -12,7 +12,7 @@ import { IoBagHandle } from "react-icons/io5";
 import { getTotal } from "../../../redux/silce/customer/cartSlice";
 import { fetchAllCategory } from "../../../redux/silce/customer/categorySlice";
 import SearchInput from "../SearchInput";
-import { Badge, Avatar } from "antd";
+import { Badge, Avatar, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 const Header = () => {
@@ -37,7 +37,7 @@ const Header = () => {
   const logoutClick = () => {
     dispatch(logout()).then((result) => {
       if (result.payload.success && result.payload.success === true) {
-        toast.success(`${result.payload.message}`);
+        message.success(`${result.payload.message}`);
         navigate("/login");
       }
     });

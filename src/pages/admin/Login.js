@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { loginAdmin, authLoginAdmin } from "../../redux/silce/admin/authSlice";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,11 +21,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const isValidInput = () => {
     if (!username) {
-      toast.error("Vui lòng nhập tên đăng nhập !");
+      message.error("Vui lòng nhập tên đăng nhập !");
       return false;
     }
     if (!password) {
-      toast.error("Vui lòng nhập mật khẩu !");
+      message.error("Vui lòng nhập mật khẩu !");
       return false;
     }
     return true;
@@ -38,10 +39,10 @@ const Login = () => {
       };
       dispatch(loginAdmin(data)).then((res) => {
         if (res.payload && res.payload.success === true) {
-          toast.success(`${res.payload.message}`);
+          message.success(`${res.payload.message}`);
         }
         if (res.payload && res.payload.detail) {
-          toast.error(`${res.payload.detail}`);
+          message.error(`${res.payload.detail}`);
         }
       });
     }

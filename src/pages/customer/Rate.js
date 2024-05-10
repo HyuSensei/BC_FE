@@ -11,7 +11,7 @@ import "../../assets/customer/Rate.css";
 import { toast } from "react-toastify";
 import { UrlImage } from "../../url";
 import { SmileOutlined } from "@ant-design/icons";
-import { Button, Result } from "antd";
+import { Button, Result, message } from "antd";
 
 const Rate = () => {
   const URL_IMAGE = UrlImage();
@@ -43,11 +43,11 @@ const Rate = () => {
   }, [isSuccessRate, isAuth]);
   const isValidRate = () => {
     if (!rating) {
-      toast.error("Vui chọn số sao đánh giá");
+      message.error("Vui chọn số sao đánh giá");
       return false;
     }
     if (!comment) {
-      toast.error("Vui nhập thông tin đánh giá");
+      message.error("Vui nhập thông tin đánh giá");
       return false;
     }
     return true;
@@ -64,7 +64,7 @@ const Rate = () => {
       };
       console.log(data_rate);
       dispatch(handleRate(data_rate));
-      toast.success("Đánh giá sản phẩm thành công");
+      message.success("Đánh giá sản phẩm thành công");
     }
   };
   return (

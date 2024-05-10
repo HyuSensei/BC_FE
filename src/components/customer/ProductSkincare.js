@@ -21,7 +21,7 @@ const ProductMakeup = () => {
 
   useEffect(() => {
     fetchAllProduct(page);
-  }, [page, category_id]);
+  }, [page, category_id, pageSize]);
 
   const fetchAllProduct = async () => {
     try {

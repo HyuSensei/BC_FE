@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCategory,
@@ -37,35 +36,35 @@ const ModalAddProduct = (props) => {
 
   const isValidAdd = () => {
     if (!name) {
-      toast.error("Vui lòng nhập tên sản phẩm");
+      message.error("Vui lòng nhập tên sản phẩm");
       return false;
     }
     if (!price) {
-      toast.error("Vui lòng nhập giá");
+      message.error("Vui lòng nhập giá");
       return false;
     }
     if (!quantity) {
-      toast.error("Vui lòng nhập số lượng");
+      message.error("Vui lòng nhập số lượng");
       return false;
     }
     if (!categoryId) {
-      toast.error("Vui lòng chọn danh mục");
+      message.error("Vui lòng chọn danh mục");
       return false;
     }
     if (!description) {
-      toast.error("Vui lòng điền mô tả");
+      message.error("Vui lòng điền mô tả");
       return false;
     }
     if (!image) {
-      toast.error("Vui lòng chọn ảnh sản phẩm");
+      message.error("Vui lòng chọn ảnh sản phẩm");
       return false;
     }
     if (isNaN(quantity)) {
-      toast.error("Vui lòng nhập đúng số lượng");
+      message.error("Vui lòng nhập đúng số lượng");
       return false;
     }
     if (isNaN(price)) {
-      toast.error("Vui lòng nhập đúng giá");
+      message.error("Vui lòng nhập đúng giá");
       return false;
     }
     return true;
@@ -76,7 +75,7 @@ const ModalAddProduct = (props) => {
     if (file) {
       const validTypes = ["image/jpeg", "image/png", "image/gif"];
       if (validTypes.indexOf(file.type) === -1 || file.size > 1024 * 1024) {
-        toast.error("Vui lòng chọn đúng định dạng ảnh");
+        message.error("Vui lòng chọn đúng định dạng ảnh");
         return;
       }
       setImage(file);

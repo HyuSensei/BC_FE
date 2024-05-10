@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../redux/silce/customer/authSilce";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -22,23 +23,23 @@ const Register = () => {
 
   const isValidInput = () => {
     if (!name) {
-      toast.error("Vui lòng điền họ và tên !");
+      message.error("Vui lòng điền họ và tên !");
       return false;
     }
     if (!email) {
-      toast.error("Vui lòng điền email !");
+      message.error("Vui lòng điền email !");
       return false;
     }
     if (!phone) {
-      toast.error("Vui lòng điền số điện thoại !");
+      message.error("Vui lòng điền số điện thoại !");
       return false;
     }
     if (!username) {
-      toast.error("Vui lòng điền tên đăng nhập !");
+      message.error("Vui lòng điền tên đăng nhập !");
       return false;
     }
     if (!password) {
-      toast.error("Vui lòng điền mật khẩu !");
+      message.error("Vui lòng điền mật khẩu !");
       return false;
     }
     return true;
@@ -72,11 +73,11 @@ const Register = () => {
       navigate("/");
     }
     if (isSuccess && isSuccess.success === true) {
-      toast.success(`${isSuccess.message}`);
+      message.success(`${isSuccess.message}`);
       navigate("/login");
     }
     if (isError && isError.detail) {
-      toast.error(`${isError.detail}`);
+      message.error(`${isError.detail}`);
     }
   }, [isSuccess, isError, isAuth]);
   return (

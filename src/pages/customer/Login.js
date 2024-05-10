@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/silce/customer/authSilce";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,11 +21,11 @@ const Login = () => {
 
   const isValidInput = () => {
     if (!username) {
-      toast.error("Vui lòng nhập tên đăng nhập !");
+      message.error("Vui lòng nhập tên đăng nhập !");
       return false;
     }
     if (!password) {
-      toast.error("Vui lòng nhập mật khẩu !");
+      message.error("Vui lòng nhập mật khẩu !");
       return false;
     }
     return true;
@@ -55,11 +56,11 @@ const Login = () => {
       navigate("/");
     }
     if (isSuccessLogin && isSuccessLogin.success === true) {
-      toast.success(`${isSuccessLogin.message}`);
+      message.success(`${isSuccessLogin.message}`);
       navigate("/");
     }
     if (isErrorLogin && isErrorLogin.detail) {
-      toast.error(`${isErrorLogin.detail}`);
+      message.error(`${isErrorLogin.detail}`);
     }
   }, [isSuccessLogin, isErrorLogin, isAuth]);
 

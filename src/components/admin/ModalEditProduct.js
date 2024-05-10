@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getCategory,
@@ -20,6 +19,7 @@ const ModalEditProduct = (props) => {
   const [quantity, setQuantity] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [description, setDescription] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { listCategory } = useSelector((state) => state.admin.product);
   const dispatch = useDispatch();
 
@@ -40,27 +40,27 @@ const ModalEditProduct = (props) => {
 
   const isValidAdd = () => {
     if (!name) {
-      toast.error("Vui lòng nhập tên sản phẩm");
+      message.error("Vui lòng nhập tên sản phẩm");
       return false;
     }
     if (!price) {
-      toast.error("Vui lòng nhập giá");
+      message.error("Vui lòng nhập giá");
       return false;
     }
     if (!quantity) {
-      toast.error("Vui lòng nhập số lượng");
+      message.error("Vui lòng nhập số lượng");
       return false;
     }
     if (!description) {
-      toast.error("Vui lòng điền mô tả");
+      message.error("Vui lòng điền mô tả");
       return false;
     }
     if (isNaN(quantity)) {
-      toast.error("Vui lòng nhập đúng số lượng");
+      message.error("Vui lòng nhập đúng số lượng");
       return false;
     }
     if (isNaN(price)) {
-      toast.error("Vui lòng nhập đúng giá");
+      message.error("Vui lòng nhập đúng giá");
       return false;
     }
     return true;
@@ -71,7 +71,7 @@ const ModalEditProduct = (props) => {
     if (file) {
       const validTypes = ["image/jpeg", "image/png", "image/gif"];
       if (validTypes.indexOf(file.type) === -1 || file.size > 1024 * 1024) {
-        toast.error("Vui lòng chọn đúng định dạng ảnh");
+        message.error("Vui lòng chọn đúng định dạng ảnh");
         return;
       }
       setImage(file);
@@ -99,8 +99,10 @@ const ModalEditProduct = (props) => {
       formData.append("category_id", categoryId);
       formData.append("description", description);
       dispatch(handleUpdateProduct(formData)).then((res) => {
+        setIsLoading(true);
         if (res.payload && res.payload.success === true) {
           message.success(`${res.payload.message}`);
+          setIsLoading(false);
           setShowModalEdit(false);
         }
       });
@@ -217,8 +219,8 @@ const ModalEditProduct = (props) => {
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => submitEdit()} type="primary">
-            THÊM
+          <Button loading={isLoading} onClick={() => submitEdit()} type="primary">
+            SỬA
           </Button>
           <Button onClick={() => handleCloseEdit()} type="dashed">
             ĐÓNG

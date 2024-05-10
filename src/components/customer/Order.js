@@ -10,6 +10,7 @@ import { clearCart } from "../../redux/silce/customer/cartSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js/pure";
+import { message } from "antd";
 
 const Order = () => {
   const navigate = useNavigate();
@@ -35,20 +36,20 @@ const Order = () => {
 
   const isValidOrder = () => {
     if (isAuth === null) {
-      toast.error("Vui lòng đăng nhập để đặt hàng");
+      message.error("Vui lòng đăng nhập để đặt hàng");
       navigate("/login");
       return false;
     }
     if (cart.length === 0) {
-      toast.error("Vui lòng thêm sản phẩm vào giỏ hàng");
+      message.error("Vui lòng thêm sản phẩm vào giỏ hàng");
       return false;
     }
     if (!name) {
-      toast.error("Vui lòng nhập tên người nhận ");
+      message.error("Vui lòng nhập tên người nhận ");
       return false;
     }
     if (!phone) {
-      toast.error("Vui lòng nhập số điện thoại");
+      message.error("Vui lòng nhập số điện thoại");
       return false;
     }
     const isValidPhone =
@@ -56,11 +57,11 @@ const Order = () => {
         phone
       );
     if (isValidPhone === false) {
-      toast.error("Vui lòng nhập đúng số điện thoại");
+      message.error("Vui lòng nhập đúng số điện thoại");
       return false;
     }
     if (!payment) {
-      toast.error("Vui lòng chọn phương thức thanh toán");
+      message.error("Vui lòng chọn phương thức thanh toán");
       return false;
     }
     return true;

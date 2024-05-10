@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const SearchInput = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const searchClick = () => {
     if (!search) {
-      toast.error("Vui lòng nhập tên sản phẩm");
+      message.error("Vui lòng nhập tên sản phẩm");
       return;
     }
     navigate(`/search?name=${search}`);

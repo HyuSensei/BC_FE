@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { UrlApi } from "../../../url";
 import { toast } from "react-toastify";
+import { message } from "antd";
 
 const URL_API = UrlApi();
 
@@ -260,7 +261,7 @@ export const orderSlice = createSlice({
         state.handleOrderCancel = action.payload;
         state.isLoadingOrder = false;
         state.isErrorOrder = null;
-        toast.success("Hủy đơn hàng thành thành công");
+        message.success("Hủy đơn hàng thành thành công");
       })
       .addCase(orderCancelAction.rejected, (state, action) => {
         state.isErrorOrder = action.payload;
@@ -278,7 +279,7 @@ export const orderSlice = createSlice({
         state.handleOrderConfirm = action.payload;
         state.isLoadingOrder = false;
         state.isErrorOrder = null;
-        toast.success("Xác nhận đã nhận hàng thành công");
+        message.success("Xác nhận đã nhận hàng thành công");
       })
       .addCase(orderConfirmAction.rejected, (state, action) => {
         state.isErrorOrder = action.payload;

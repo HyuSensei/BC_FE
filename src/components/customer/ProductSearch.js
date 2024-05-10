@@ -2,23 +2,22 @@ import React, { useEffect, useState } from "react";
 import { UrlImage } from "../../url";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import ReactPaginate from "react-paginate";
 import { getProductSearch } from "../../axios/services";
-import { Image } from "antd";
+import { Image, Pagination, Spin } from "antd";
 
 const URL_IMAGE = UrlImage();
 const ProductSearch = () => {
   const navigate = useNavigate();
   const [listProduct, setListProduct] = useState([]);
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
   const [totalPage, setTotalPage] = useState(0);
   const location = useLocation();
   let name = new URLSearchParams(location.search).get("name");
 
   const fetchProductSearch = async (page) => {
     try {
-      let res = await getProductSearch(name, page);
-      console.log(res.data);
+      let res = await getProductSearch({ name, page, limit: pageSize });
       setListProduct(res.data.products);
       setTotalPage(res.data.total_page);
     } catch (error) {
@@ -27,11 +26,21 @@ const ProductSearch = () => {
   };
   useEffect(() => {
     fetchProductSearch(page);
-  }, [page, name]);
+  }, [page, name, pageSize]);
 
-  const handlePageClick = (e) => {
-    setPage(e.selected + 1);
-  };
+  if (listProduct.length === 0) {
+    const contentStyle = {
+      padding: 50,
+      background: "rgba(0, 0, 0, 0.05)",
+      borderRadius: 4,
+    };
+    const content = <div style={contentStyle} />;
+    return (
+      <Spin tip="Loading" size="small">
+        {content}
+      </Spin>
+    );
+  }
   return (
     <div
       style={{ marginTop: "40px", marginBottom: "40px" }}
@@ -87,26 +96,19 @@ const ProductSearch = () => {
               );
             })}
           </div>
-          <ReactPaginate
-            nextLabel=" >"
-            onPageChange={(e) => handlePageClick(e)}
-            pageRangeDisplayed={3}
-            marginPagesDisplayed={2}
-            pageCount={totalPage}
-            previousLabel="< "
-            pageClassName="page-item"
-            pageLinkClassName="page-link"
-            previousClassName="page-item"
-            previousLinkClassName="page-link"
-            nextClassName="page-item"
-            nextLinkClassName="page-link"
-            breakLabel="..."
-            breakClassName="page-item"
-            breakLinkClassName="page-link"
-            containerClassName="pagination"
-            activeClassName="active"
-            renderOnZeroPageCount={null}
-          />
+          {listProduct.length > 0 && (
+            <Pagination
+              onChange={(pageValue, _) => {
+                setPage(pageValue);
+              }}
+              onShowSizeChange={(_, size) => {
+                setPageSize(size);
+              }}
+              current={page}
+              pageSize={pageSize}
+              total={totalPage * pageSize}
+            />
+          )}
         </>
       ) : (
         <>

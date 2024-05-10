@@ -9,8 +9,10 @@ const getProductCategory = async ({ category_id, page = 1, limit = 8 }) => {
   );
 };
 
-const getProductSearch = async (name, page) => {
-  return await axios.get(URL_API + `/search?name=${name}&page=${page}`);
+const getProductSearch = async ({ name, page = 1, limit = 8 }) => {
+  return await axios.get(
+    URL_API + `/search?name=${name}&page=${page}&limit=${limit}`
+  );
 };
 
 const getOrderAdmin = async ({ page = 1, limit = 5 }) => {
